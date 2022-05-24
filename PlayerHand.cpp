@@ -86,10 +86,20 @@ void PlayerHand::player_turn()
         save = true;
         filename = userInput[1];
     }
+    else if (action == "help"){
+    help(0);
+    player_turn();
+   
+    }
+    else if (action == "hand"){
+        print_hand();
+        player_turn();
+    }
     // EOF key entered.
     else if (std::cin.eof()){
         quit = true;
     }
+   
     // Incorrect user input
     else
     {
@@ -110,16 +120,25 @@ void PlayerHand::place(std::vector<std::string> &user_input){
         // checks input is valid
         bool valid = std::find(valid_input.begin(), valid_input.end(), user_input[1]) != valid_input.end();
         // invalid input
+        if (user_input[0] == "help"){
+            help(1);
+            get_user_input(user_input);
+        }
+        else if(user_input[0] == "hand"){
+            print_hand();
+            get_user_input(user_input);
+
+        }
         if (user_input[0] != "place" || !valid){
             std::cout << user_input[0] << " " << user_input[1] << " " << user_input[2] << " " << user_input[3] <<std::endl;
             std::cout<<"Incorrect Input! Try Again!" << std::endl;
             get_user_input(user_input);
         
         }
+    
         // valid input 
-        if (valid && user_input[0] == "place")
+        if (valid && user_input[0] == "place" && user_input[1] != "done")
         {
-            print_hand();
             std::cout << user_input[0] << " " << user_input[1] << " " << user_input[2] << " " << user_input[3] <<std::endl;
             Letter letter = user_input[1][0];
             
@@ -183,6 +202,7 @@ void PlayerHand::place(std::vector<std::string> &user_input){
     if (user_input[1] == "done"){
         std::cout << user_input[0] << " " << user_input[1]<<std::endl;
     }
+    fill_hand();
     
     // BINGO OPERATION!!!
     if (counter == 7){
@@ -194,14 +214,10 @@ void PlayerHand::place_tile(Tile* chosen_tile, int row, int col)
 {
     score += chosen_tile->value;
     chosen_tile->player = player_name;
-    
-    // sets board tile new letter
     board->place(chosen_tile,row,col);
-    // increments player score by tile value
+  
     
-    // deallocated memory of chosen_tile
-    // get new tile from tileBag
-    fill_hand();
+
 }
 void PlayerHand::replace(Letter letter)
 {
@@ -217,6 +233,21 @@ void PlayerHand::replace(Letter letter)
     else{
         std::cout<<"Tile not in Hand!"<<std::endl;
         player_turn();
+    }
+}
+
+void PlayerHand::help(int setting){
+    std::cout<<"HELP:"<<std::endl;
+    std::cout<<"Avaiable Commands:"<<std::endl;
+    std::cout << "- Place Tile(s) on Board: place \"Tile\" at \"Grid Position\"" << std::endl;
+    std::cout << "- Show Player hand: hand " <<std::endl;
+    if (setting == 0){
+        std::cout << "- Save Game: save \"name\"" << std::endl;
+        std::cout << "- Skip Player Turn): pass" << std::endl;
+        std::cout << "- Replace Tile in Hand: replace \"Tile\"" <<std::endl;
+    }
+    else if (setting == 1){
+        std::cout << "- Finish Placing Tiles: place done " <<std::endl;
     }
 }
 

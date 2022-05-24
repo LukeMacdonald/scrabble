@@ -1,8 +1,14 @@
+#include <iomanip>
 #include "Extras.h"
 #include "TileBag.h"
 #include "Board.h"
 #include "Dictionary.h"
 #include "PlayerHand.h"
+
+#define NC "\e[0m"
+#define RED "\e[0;31m"
+#define GRN "\e[0;32m"
+#define YEL "\e[0;33m"
 
 #define EXIT_SUCCESS    0
 
@@ -23,19 +29,26 @@ void player_turn(PlayerHand* p1, PlayerHand* p2, TileBag* bag,Board* board);
 // function to save game to file
 void save(PlayerHand* p1, PlayerHand* p2,TileBag* bag, Board* board);
 
+void save_scores(std::string p1_name, std::string p2_name,int p1_score,int p2_score);
+bool sortbysec(const std::tuple<std::string, int>& a, const std::tuple<std::string, int>& b);
+
+void high_scores();
+
 int main(void) {
    
    menu();
    int option = 0;
    std::cin >> option;
 
-   while(!std::cin.eof() && option != 4){
+   while(!std::cin.eof() && option != 5){
       if(option == 1){
          new_game();
       } else if(option == 2){
          load();
       } else if(option == 3){
          credits();
+      }else if(option == 4){
+         high_scores();
       } else {
 
       }
@@ -57,7 +70,8 @@ void menu(){
    std::cout << "1. New game" << std::endl;
    std::cout << "2. Load game" << std::endl;
    std::cout << "3. Credits (Show student information)" << std::endl;
-   std::cout << "4. Quit" << std::endl;
+   std::cout << "4. High Scores" <<std::endl;
+   std::cout << "5. Quit" << std::endl;
    std::cout << ">";
 }
 
@@ -170,6 +184,7 @@ void save(PlayerHand* p1, PlayerHand* p2, TileBag* bag, Board* board){
    std::string file_name = p1->get_filename();
    std::ofstream output_file(file_name + ".txt");
    
+   save_scores(p1->get_player_name(),p2->get_player_name(),p1->get_score(),p2->get_score());
    p1->save_details(output_file);
    p2->save_details(output_file);
    board->save_details(output_file);
@@ -216,3 +231,89 @@ void load(){
    p2->set_bag(bag);
    player_turn(p1,p2,bag,board);
 }
+
+void high_scores(){
+   std::ifstream input_file;
+   std::string player;
+   std::cout << "HIGH SCORES:" << std::endl;
+   input_file.open("high_scores.txt");
+   int score;
+   std::cout << "Player : Score" <<std::endl;
+   std::cout <<"-----------------"<< std::endl;
+   int counter = 0;
+
+   while(!input_file.eof()){
+      counter++;
+      input_file >> player;
+      input_file >> score;
+      if (counter == 1 && player != ""){
+          std::cout << GRN << player<<" : " << score << " (1st)" <<  NC  << std::endl;
+      }
+      else if (counter == 2){
+          std::cout << RED <<player <<" : " << score << " (2nd)" <<NC << std::endl;
+      }
+      else if (counter == 3){
+          std::cout << YEL << player<<" : " << score<<" (3rd)" << NC << std::endl;
+      }
+      else if (counter > 3){
+          std::cout <<player<<" : " << score<< std::endl;
+      }
+   }
+
+   input_file.close();
+
+}
+void save_scores(std::string p1_name, std::string p2_name,int p1_score,int p2_score){
+   std::ifstream input_file;
+   std::string player;
+   input_file.open("high_scores.txt");
+   int score;
+   bool p1Found = false;
+   bool p2Found = false; 
+   
+   std::vector<std::tuple<std::string,int>> all_scores;
+
+   while(input_file.good()){
+      input_file >> player;
+      input_file >> score;
+      if (player == p1_name){
+         p1Found = true;
+         if (score < p1_score){
+            score = p1_score;
+         }
+      }
+      else if (player == p2_name){
+         p2Found = true;
+         if (score < p2_score){
+            score = p2_score;
+         }
+      }
+      if (player != ""){
+         all_scores.push_back(std::make_tuple(player,score));
+      }
+   }
+   if (!p1Found){
+      all_scores.push_back(std::make_tuple(p1_name,p1_score));
+   }
+   if (!p2Found){
+       all_scores.push_back(std::make_tuple(p2_name,p2_score));
+   }
+   sort(all_scores.begin(), all_scores.end(), sortbysec);
+
+   std::ofstream output_file("high_scores.txt");
+   for (int i = 0; i < all_scores.size();i++){
+      output_file << std::get<0>(all_scores[i]) << " "<< std::get<1>(all_scores[i]);
+      if (i < all_scores.size() - 1){
+         output_file << std::endl;
+      }
+   }
+   output_file.close();
+
+
+}
+bool sortbysec(const std::tuple<std::string, int>& a, 
+               const std::tuple<std::string, int>& b)
+{
+    return (std::get<1>(a) > std::get<1>(b));
+}
+

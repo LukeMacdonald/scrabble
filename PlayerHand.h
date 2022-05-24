@@ -23,6 +23,7 @@ public:
    void place_tile(Tile* chosen_tile, int row, int col);
    void replace(Letter);
    void pass();
+   void help(int setting);
 
    // Fill Players Hand
    void fill_hand();
@@ -43,6 +44,7 @@ public:
    bool quit_game();;
    void save_details(std::ofstream& output_file);
    void load_details(std::ifstream& input_file);
+
 
 
 private:
