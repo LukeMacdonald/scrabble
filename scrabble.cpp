@@ -214,8 +214,5 @@ void load(){
    bag->load_details(input_file);
    p1->set_bag(bag);
    p2->set_bag(bag);
-   for (int i = 0; i < bag->size();i++){
-      std::cout<< bag->get(i)->letter;
-   }
    player_turn(p1,p2,bag,board);
 }

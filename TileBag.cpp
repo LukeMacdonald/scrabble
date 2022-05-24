@@ -89,7 +89,6 @@ void TileBag::save_details(std::ofstream& output_file){
 
     for(int i = 0; i < tiles->size();i++)
     {
-        std::cout << tiles->get(i)->tile->letter << "-" << tiles->get(i)->tile->value;
         output_file << tiles->get(i)->tile->letter << "-" << tiles->get(i)->tile->value;
         if (i < tiles->size() - 1)
         {

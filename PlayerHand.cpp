@@ -100,8 +100,8 @@ void PlayerHand::player_turn()
 }
 void PlayerHand::place(std::vector<std::string> &user_input){
 
-    std::vector<std::tuple<Tile*,int,int>> pile;
-    std::string word = "";
+    //std::vector<std::tuple<Tile*,int,int>> pile;
+    //std::string word = "";
 
     int counter = 0; 
     // iterate until either player selects done or has placed entire hand
@@ -156,9 +156,10 @@ void PlayerHand::place(std::vector<std::string> &user_input){
                     if (chosen_tile == nullptr){
                         throw chosen_tile;
                     }
-                    word += chosen_tile->letter;
+                    //word += chosen_tile->letter;
                     
-                    pile.push_back(std::make_tuple(chosen_tile,row,col));
+                    //pile.push_back(std::make_tuple(chosen_tile,row,col));
+                    place_tile(chosen_tile,row,col);
                 
                     //place_tile(chosen_tile,row,col);
                     if (counter < 6){
@@ -182,14 +183,7 @@ void PlayerHand::place(std::vector<std::string> &user_input){
     if (user_input[1] == "done"){
         std::cout << user_input[0] << " " << user_input[1]<<std::endl;
     }
-    std::cout<< word;
-    if (dictionary->search(word)){
-        std::cout<< word;
-        std::cout<<"Word Found!"<<std::endl;
-        for (int i = 0; i < pile.size();i++){
-             place_tile(std::get<0>(pile[i]),std::get<1>(pile[i]),std::get<2>(pile[i]));
-        }
-    }
+    
     // BINGO OPERATION!!!
     if (counter == 7){
         score+=50;
