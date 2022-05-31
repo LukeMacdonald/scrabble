@@ -208,7 +208,7 @@ void PlayerHand::place(std::vector<std::string> &user_input){
             int col = std::get<2>(pile[i]);
             Tile* tile = std::get<0>(pile[i]);
             tile->player = player_name;
-            board->place(tile,row,col);
+            place_tile(tile,row,col);
         }
     }
     else{
@@ -235,8 +235,6 @@ void PlayerHand::place_tile(Tile* chosen_tile, int row, int col)
     chosen_tile->player = player_name;
     board->place(chosen_tile,row,col);
   
-    
-
 }
 void PlayerHand::replace(Letter letter)
 {

@@ -85,9 +85,9 @@ bool Board::word_checker(std::vector<std::tuple<Tile*,int,int>> &pile){
    std::string word;
 
    for (int i = 0; i < pile.size();i++){
-      int row = std::get<1>(pile[i]);
-      int col = std::get<2>(pile[i]);
-      Letter letter = std::get<0>(pile[i])->letter;
+      int row = std::get<1>(pile.at(i));
+      int col = std::get<2>(pile.at(i));
+      Letter letter = std::get<0>(pile.at(i))->letter;
       board[row][col]->letter = letter;
    }
    
@@ -99,8 +99,8 @@ bool Board::word_checker(std::vector<std::tuple<Tile*,int,int>> &pile){
             if (word != ""){
                if (!dictionary->search(word)){
                   for (int i = 0; i < pile.size();i++){
-                     int row = std::get<1>(pile[i]);
-                     int col = std::get<2>(pile[i]);
+                     int row = std::get<1>(pile.at(i));
+                     int col = std::get<2>(pile.at(i));
                      board[row][col]->letter = ' ';
                   }
                   return false;
@@ -120,8 +120,8 @@ bool Board::word_checker(std::vector<std::tuple<Tile*,int,int>> &pile){
             if (word != ""){
                if (!dictionary->search(word)){
                   for (int i = 0; i < pile.size();i++){
-                     int row = std::get<1>(pile[i]);
-                     int col = std::get<2>(pile[i]);
+                     int row = std::get<1>(pile.at(i));
+                     int col = std::get<2>(pile.at(i));
                      board[row][col]->letter = ' ';
                   }
                   return false;
