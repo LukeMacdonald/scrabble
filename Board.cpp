@@ -81,6 +81,63 @@ void Board::place(Tile*tile, int row,int col){
 }
 
 
+bool Board::word_checker(std::vector<std::tuple<Tile*,int,int>> &pile){
+   std::string word;
+
+   for (int i = 0; i < pile.size();i++){
+      int row = std::get<1>(pile[i]);
+      int col = std::get<2>(pile[i]);
+      Letter letter = std::get<0>(pile[i])->letter;
+      board[row][col]->letter = letter;
+   }
+   
+   
+   for (int i = 0; i < BOARD_HEIGHT;i++){
+      word = "";
+      for (int j = 0; j < BOARD_WIDTH;j++){
+         if (check_empty(i,j)){
+            if (word != ""){
+               if (!dictionary->search(word)){
+                  for (int i = 0; i < pile.size();i++){
+                     int row = std::get<1>(pile[i]);
+                     int col = std::get<2>(pile[i]);
+                     board[row][col]->letter = ' ';
+                  }
+                  return false;
+               }
+               word = "";
+            }
+         }
+         else{
+            word += board[i][j]->letter;
+         }
+      }
+   }
+   for (int j = 0; j < BOARD_WIDTH;j++){
+      word = "";
+      for (int i = 0; i < BOARD_HEIGHT;i++){
+         if (check_empty(i,j)){
+            if (word != ""){
+               if (!dictionary->search(word)){
+                  for (int i = 0; i < pile.size();i++){
+                     int row = std::get<1>(pile[i]);
+                     int col = std::get<2>(pile[i]);
+                     board[row][col]->letter = ' ';
+                  }
+                  return false;
+               }
+               word = "";
+            }
+         }
+         else{
+            word += board[i][j]->letter;
+         }
+      }
+   }
+   return true;
+}
+
+
 Tile* Board::get(int row,int col){
    return board[row][col];
 }
@@ -160,4 +217,7 @@ void Board::set_player1(std::string player1){
 }
 void Board::set_player2(std::string player2){
     this->player2 = player2;
+}
+void Board::set_dictionary(Dictionary* dictionary){
+    this->dictionary = dictionary;
 }

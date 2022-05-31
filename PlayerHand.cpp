@@ -110,7 +110,7 @@ void PlayerHand::player_turn()
 }
 void PlayerHand::place(std::vector<std::string> &user_input){
 
-    //std::vector<std::tuple<Tile*,int,int>> pile;
+    std::vector<std::tuple<Tile*,int,int>> pile;
     //std::string word = "";
 
     int counter = 0; 
@@ -175,12 +175,12 @@ void PlayerHand::place(std::vector<std::string> &user_input){
                     if (chosen_tile == nullptr){
                         throw chosen_tile;
                     }
-                    //word += chosen_tile->letter;
                     
-                    //pile.push_back(std::make_tuple(chosen_tile,row,col));
-                    place_tile(chosen_tile,row,col);
+                    
+                    pile.push_back(std::make_tuple(chosen_tile,row,col));
+                    
                 
-                    //place_tile(chosen_tile,row,col);
+                    
                     if (counter < 6){
                         get_user_input(user_input); 
                     }            
@@ -202,6 +202,25 @@ void PlayerHand::place(std::vector<std::string> &user_input){
     if (user_input[1] == "done"){
         std::cout << user_input[0] << " " << user_input[1]<<std::endl;
     }
+    if(board->word_checker(pile)){
+        for (int i = 0; i < pile.size();i++){
+            int row = std::get<1>(pile[i]);
+            int col = std::get<2>(pile[i]);
+            Tile* tile = std::get<0>(pile[i]);
+            tile->player = player_name;
+            board->place(tile,row,col);
+        }
+    }
+    else{
+        std::cout << "Invalid Words" << std::endl;
+         for (int i = 0; i < pile.size();i++){
+            Tile* tile = std::get<0>(pile[i]);
+            hand->addBack(tile);
+        }
+        get_user_input(user_input);
+        place(user_input);
+    }
+
     fill_hand();
     
     // BINGO OPERATION!!!
@@ -277,9 +296,6 @@ void PlayerHand::set_bag(TileBag* bag){
 }
 void PlayerHand::set_board(Board* board){
     this->board = board;
-}
-void PlayerHand::set_dictionary(Dictionary* dictionary){
-    this->dictionary = dictionary;
 }
 
 int PlayerHand::get_score() {

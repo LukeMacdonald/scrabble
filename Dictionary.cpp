@@ -28,7 +28,14 @@ int Dictionary::size(){
 }
 
 bool Dictionary::search(std::string word){
-    bool result = find(word,0,size());  
+    bool result;
+    if(std::find(dictionary.begin(), dictionary.end(), word) != dictionary.end()) {
+        result = true;
+    
+    } else {
+        result = false;
+    /* v does not contain x */
+    }
     return result;
 }
 bool Dictionary::find(std::string word,int start,int end)

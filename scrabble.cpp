@@ -30,9 +30,12 @@ void player_turn(PlayerHand* p1, PlayerHand* p2, TileBag* bag,Board* board);
 void save(PlayerHand* p1, PlayerHand* p2,TileBag* bag, Board* board);
 
 void save_scores(std::string p1_name, std::string p2_name,int p1_score,int p2_score);
+
 bool sortbysec(const std::tuple<std::string, int>& a, const std::tuple<std::string, int>& b);
 
 void high_scores();
+
+void settings();
 
 int main(void) {
    
@@ -40,7 +43,7 @@ int main(void) {
    int option = 0;
    std::cin >> option;
 
-   while(!std::cin.eof() && option != 5){
+   while(!std::cin.eof() && option != 6){
       if(option == 1){
          new_game();
       } else if(option == 2){
@@ -49,6 +52,8 @@ int main(void) {
          credits();
       }else if(option == 4){
          high_scores();
+      }else if (option == 5){
+         settings();
       } else {
 
       }
@@ -71,8 +76,9 @@ void menu(){
    std::cout << "2. Load game" << std::endl;
    std::cout << "3. Credits (Show student information)" << std::endl;
    std::cout << "4. High Scores" <<std::endl;
-   std::cout << "5. Quit" << std::endl;
-   std::cout << ">";
+   std::cout << "5. Settings" << std::endl;
+   std::cout << "6. Quit" << std::endl;
+   std::cout << "> ";
 }
 
 void credits(){
@@ -97,6 +103,7 @@ void new_game(){
    // initialises TileBag
    TileBag* tileBag = new TileBag("ScrabbleTiles");
    Dictionary* dicationary = new Dictionary("wordlist");
+   board->set_dictionary(dicationary);
    // initialises board
    board->print();
    // gets first players name
@@ -114,9 +121,7 @@ void new_game(){
    board->set_player1(player1->get_player_name());
    PlayerHand* player2 = new PlayerHand(playerTwo,tileBag,board);
    board->set_player2(player2->get_player_name());
-   
-   player1->set_dictionary(dicationary);
-   player2->set_dictionary(dicationary);
+
   
    // flush buffer
    std::cin.ignore(INT_MAX, '\n');
@@ -315,5 +320,42 @@ bool sortbysec(const std::tuple<std::string, int>& a,
                const std::tuple<std::string, int>& b)
 {
     return (std::get<1>(a) > std::get<1>(b));
+}
+void settings(){
+   std::cout << "Settings:" << std::endl;
+   std::cout << "1. Board Game Colour" <<std::endl;
+   std::cout << "2. Reset High Scores" <<std::endl;
+   std::cout << "3. Select Number of Players" <<std::endl;
+   std::cout << "4. Word Checker" << std::endl;
+   std::cout << "5. Return to Main Menu" <<std::endl;
+   std::cout << "> ";
+   int option = 0;
+   int num_players;
+   std::cin.ignore();
+   std::cin >> option;
+
+   while(!std::cin.eof() && option != 6){
+      if(option == 1){
+         new_game();
+      } else if(option == 2){
+         std::cout <<"Resetting High Scores..."<<std::endl;
+         std::ofstream file("high_scores.txt");
+         file.close();
+         std::cout << "Complete!" << std::endl;
+      } else if(option == 3){
+         std::cout<<"Enter Number of Players (2-4)" << std::endl;
+         std::cin >> num_players;
+      }else if(option == 5){
+      } 
+      else {
+
+      }
+      if (!std::cin.eof()){
+         menu();
+         std::cin >> option;
+      }
+   }
+
+      
 }
 

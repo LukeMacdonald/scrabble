@@ -3,6 +3,7 @@
 
 #include "Tile.h"
 #include "Extras.h"
+#include "Dictionary.h"
 
 #define RED "\e[0;31m"
 #define GRN "\e[0;32m"
@@ -24,8 +25,11 @@ public:
    int get_row_int(Letter letter);
    void set_player1(std::string player1);
    void set_player2(std::string player2);
+   void set_dictionary(Dictionary* dictionary);
+   bool word_checker(std::vector<std::tuple<Tile*,int,int>> &pile);
 private:
    std::vector<std::vector<Tile*>> board;
+   Dictionary* dictionary;
    std::string player1;
    std::string player2;
 };
