@@ -5,7 +5,6 @@
 #include "Extras.h"
 #include "Dictionary.h"
 
-
 class Board {
 public:
    Board();
@@ -33,6 +32,8 @@ public:
    void set_player2(std::string player2);
    
    void set_dictionary(Dictionary* dictionary);
+   
+   Dictionary* get_dictionary();
    
    bool word_checker(std::vector<std::tuple<Tile*,int,int>> &pile);
 

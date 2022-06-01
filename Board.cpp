@@ -1,4 +1,5 @@
 #include "Board.h"
+#include "BoardC.h"
 Board::Board(){
    
    player1 = "";
@@ -46,15 +47,19 @@ void Board::print(){
    for(int i = 0; i < BOARD_HEIGHT; i++){
       std::cout << char(row + i) << " | ";
       for(int j = 0; j < BOARD_WIDTH; j++){
-          if (board[i][j]->player == player1){
-              std::cout << RED << board[i][j]->letter << NC " | ";
+         if (board[i][j]->player == player1){ 
+            std::string s(1, board[i][j]->letter);
+            color("green",s,false);
+            std::cout << " | ";
           }
-          else if (board[i][j]->player == player2){
-              std::cout << GRN << board[i][j]->letter << NC " | ";
-          }
-          else{
-              std::cout <<  board[i][j]->letter << " | ";
-          }
+         else if (board[i][j]->player == player2){
+            std::string s(1, board[i][j]->letter);
+            color("red",s,false);
+            std::cout << " | ";
+         }
+         else{
+            std::cout <<  board[i][j]->letter << " | ";
+         }
 
    
       }
@@ -84,21 +89,26 @@ void Board::place(Tile*tile, int row,int col){
 
 bool Board::word_checker(std::vector<std::tuple<Tile*,int,int>> &pile){
    std::string word;
-
+   // Sets the desired tiles temporarily
    for (int i = 0; i < pile.size();i++){
       int row = std::get<1>(pile.at(i));
       int col = std::get<2>(pile.at(i));
       Letter letter = std::get<0>(pile.at(i))->letter;
       board[row][col]->letter = letter;
    }
-   
-   
+   // Iterates over all rows checking if all words are valid
    for (int i = 0; i < BOARD_HEIGHT;i++){
       word = "";
       for (int j = 0; j < BOARD_WIDTH;j++){
+         // Checks tile position is empty
          if (check_empty(i,j)){
+            // If empty and word and is not blank then check to see if word is in
+            // dictionary
             if (word != ""){
+               // function to reverse string as the reverse string is also valid as
+               // a word
                std::string r = reverse(word);
+               // Checks if the word and reverse of the word are valid
                if (!dictionary->search(word) && !dictionary->search(r)){
                   for (int i = 0; i < pile.size();i++){
                      int row = std::get<1>(pile.at(i));
@@ -107,14 +117,17 @@ bool Board::word_checker(std::vector<std::tuple<Tile*,int,int>> &pile){
                   }
                   return false;
                }
+               // Sets word back to blank after the empty tile was encounterd
                word = "";
             }
          }
          else{
+            // If tile wasnt empty add letter of tile to word
             word += board[i][j]->letter;
          }
       }
    }
+   // Repeat previous steps but for each column.
    for (int j = 0; j < BOARD_WIDTH;j++){
       word = "";
       for (int i = 0; i < BOARD_HEIGHT;i++){
@@ -149,6 +162,7 @@ void Board::save_details(std::ofstream& output_file){
    for(int i = 0; i < BOARD_HEIGHT; i++){
       for(int j = 0; j < BOARD_WIDTH; j++){
          if (board[i][j]->letter != ' '){
+            // Stores the tiles placed on board to file.
             output_file << board[i][j]->letter << '@' <<get_row_char(i) << j << " ";
          }
       }
@@ -179,6 +193,9 @@ void Board::set_player2(std::string player2){
 }
 void Board::set_dictionary(Dictionary* dictionary){
     this->dictionary = dictionary;
+}
+Dictionary* Board::get_dictionary(){
+   return dictionary;
 }
 
 Letter Board::get_row_char(int row){

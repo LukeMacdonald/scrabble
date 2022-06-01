@@ -9,10 +9,11 @@ class Dictionary {
         Dictionary();
         Dictionary(std::string filename);
         ~Dictionary();
-        
+        // Fill dictionary will words from file
         void fill(std::string filename);
+        // Get size of dictionary
         int size();
-        
+        // Search for word in dictionary
         bool search(std::string);
         
     private:

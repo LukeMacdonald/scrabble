@@ -1,10 +1,9 @@
-#include <iomanip>
 #include "Extras.h"
 #include "TileBag.h"
 #include "Board.h"
 #include "Dictionary.h"
 #include "PlayerHand.h"
-
+#include "MainC.h"
 #define EXIT_SUCCESS    0
 
 // function to print game menu
@@ -82,10 +81,29 @@ bool checkFile(const std::string &str) {
 void new_game(){
    // declares Board
    Board* board = new Board();
+   // Gives option to have coloured terminal
+   std::cout << "Enable Coloured Terminal? (y/n):" <<std::endl;
+   std::cin.ignore();
+   std::string colour;
+   getline(std::cin,colour);
+  
+   // Gives option to have word checker activiated.
+   std::cout << "Enable Word Checker? (y/n):" <<std::endl;
+   std::string checker;
+   getline(std::cin,checker);
+
    // initialises TileBag
    TileBag* tileBag = new TileBag("configs/ScrabbleTiles");
    Dictionary* dicationary = new Dictionary("configs/wordlist");
-   board->set_dictionary(dicationary);
+   
+   // Checks if player wants to have word checker
+   if (checker == "y"){
+      board->set_dictionary(dicationary);
+   }
+   else{
+      board->set_dictionary(nullptr);
+   }
+   
    // initialises board
    board->print();
    // gets first players name
@@ -100,10 +118,17 @@ void new_game(){
   
    // declares and initialises the two players
    PlayerHand* player1 = new PlayerHand(playerOne,tileBag,board);
-   board->set_player1(player1->get_player_name());
+   
    PlayerHand* player2 = new PlayerHand(playerTwo,tileBag,board);
-   board->set_player2(player2->get_player_name());
-
+   // Checks if player wants terminal in colour
+   if (colour == "y"){
+      board->set_player1(player1->get_player_name());
+      board->set_player2(player2->get_player_name());
+   }
+   else{
+      board->set_player1("None");
+      board->set_player2("None");
+   }
    // flush buffer
    std::cin.ignore(INT_MAX, '\n');
    // calls function to start players turn
@@ -204,14 +229,26 @@ void save(PlayerHand* p1, PlayerHand* p2, TileBag* bag, Board* board){
       output_file << '\n' << file_name;
       output_file.close();
    }
+   
    // Saves details of game to the file
    output_file.open("saved_games/"+ file_name + ".txt");
    
    save_scores(p1->get_player_name(),p2->get_player_name(),p1->get_score(),p2->get_score());
+   // Save info of player 1
    p1->save_details(output_file);
+   // Save info of player 2
    p2->save_details(output_file);
+   // Save info of Board
    board->save_details(output_file);
+   // Save info of Tile Bag
    bag->save_details(output_file);
+   // Saves whether a word checker is used in this game
+   if (board->get_dictionary()!= nullptr){
+      output_file<< 'Y' <<std::endl;
+   }
+   else{
+      output_file<< 'N' <<std::endl;
+   }
 
    output_file.close();
    std::cout<<"Game Saved!" <<std::endl;
@@ -258,6 +295,7 @@ void load(){
       getline(std::cin,fileName);
    }
    input_file.open("saved_games/" + fileName + ".txt");
+   
    // Loads all the details of saved game and starts the game
    p1->load_details(input_file);
    p2->load_details(input_file);
@@ -266,11 +304,33 @@ void load(){
    p2->set_board(board);
    board->set_player1(p1->get_player_name());
    board->set_player2(p2->get_player_name());
-   board->set_dictionary(dicationary);
    bag->load_details(input_file);
    p1->set_bag(bag);
    p2->set_bag(bag);
+   std::string word_checker;
+   getline(input_file,word_checker);
+   // Checks if word checker was used in this game
+   // If so then sets the dictionary of board
+   if (word_checker == "N"){
+      board->set_dictionary(nullptr);
+   }
+   else if (word_checker == "Y"){
+      board->set_dictionary(dicationary);
+   }
    input_file.close();
+   // Gives player option of enabling a coloured terminal
+   std::cout << "Enable Coloured Terminal? (y/n):" <<std::endl;
+   std::string colour;
+   getline(std::cin,colour);
+   if (colour == "y"){
+     
+      board->set_player1(p1->get_player_name());
+      board->set_player2(p2->get_player_name());
+   }
+   else{
+      board->set_player1("None");
+      board->set_player2("None");
+   }
    player_turn(p1,p2,bag,board);
 }
 
@@ -278,25 +338,33 @@ void high_scores(){
    std::ifstream input_file;
    std::string player;
    std::cout << "HIGH SCORES:" << std::endl;
-   input_file.open("high_scores.txt");
+   input_file.open("configs/high_scores.txt");
    int score;
    std::cout << "Player : Score" <<std::endl;
    std::cout <<"-----------------"<< std::endl;
    int counter = 0;
-
+   // Gets all the previous players and their scores and stores them
+   // in a vector of tuples
    while(!input_file.eof()){
       counter++;
       input_file >> player;
       input_file >> score;
+      // Prints the player in first place out in green
       if (counter == 1 && player != ""){
-          std::cout << GRN << player<<" : " << score << " (1st)" <<  NC  << std::endl;
+         std::string message = player + " : " + std::to_string(score) + " (1st)";
+         color2("green",message,true);
       }
+      // Prints the player in second place out in red
       else if (counter == 2){
-          std::cout << RED <<player <<" : " << score << " (2nd)" <<NC << std::endl;
+         std::string message = player + " : " + std::to_string(score) + " (2nd)";
+         color2("red",message,true);
       }
+      // Prints the player in third place out in yellow
       else if (counter == 3){
-          std::cout << YEL << player<<" : " << score<<" (3rd)" << NC << std::endl;
+         std::string message = player + " : " + std::to_string(score) + " (3rd)";
+         color2("yellow",message,true);
       }
+      // Prints remaining players normally
       else if (counter > 3){
           std::cout <<player<<" : " << score<< std::endl;
       }
@@ -313,36 +381,50 @@ void save_scores(std::string p1_name, std::string p2_name,int p1_score,int p2_sc
    bool p1Found = false;
    bool p2Found = false; 
    
+   // Declares vector of tuple to store playernames and scores
    std::vector<std::tuple<std::string,int>> all_scores;
-
+   // Read player names and scores from file and store in vector
    while(input_file.good()){
       input_file >> player;
       input_file >> score;
+      // Checks if player1 is already entered
       if (player == p1_name){
          p1Found = true;
+         // If player1 is already saved then compare the previous score 
+         // to new score
          if (score < p1_score){
+            // if old score is less than new score update score
             score = p1_score;
          }
       }
+      // Checks if player2 is already entered
       else if (player == p2_name){
          p2Found = true;
+         // If player2 is already saved then compare the previous score 
+         // to new score
          if (score < p2_score){
+            // if old score is less than new score update score
             score = p2_score;
          }
       }
+      // Adds player to vector if the name isnt blank
       if (player != ""){
          all_scores.push_back(std::make_tuple(player,score));
       }
    }
+   // Adds player1 to vector if they werent already in it.
    if (!p1Found){
       all_scores.push_back(std::make_tuple(p1_name,p1_score));
    }
+   // Adds player1 to vector if they werent already in it.
    if (!p2Found){
        all_scores.push_back(std::make_tuple(p2_name,p2_score));
    }
+   // Sorts the vector by the second element(score) in tuples
    sort(all_scores.begin(), all_scores.end(), sortbysec);
 
    std::ofstream output_file("configs/high_scores.txt");
+   // Outputs all scores to vector again
    for (int i = 0; i < all_scores.size();i++){
       output_file << std::get<0>(all_scores[i]) << " "<< std::get<1>(all_scores[i]);
       if (i < all_scores.size() - 1){
@@ -354,5 +436,6 @@ void save_scores(std::string p1_name, std::string p2_name,int p1_score,int p2_sc
 bool sortbysec(const std::tuple<std::string, int>& a, 
                const std::tuple<std::string, int>& b)
 {
+    // Compares the second element of each tuple
     return (std::get<1>(a) > std::get<1>(b));
 }

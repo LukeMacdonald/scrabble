@@ -100,7 +100,7 @@ void PlayerHand::player_turn()
 
 }
 void PlayerHand::place(std::vector<std::string> &user_input){
-
+    // declares vector of tuples which stores tiles and grid positions
     std::vector<std::tuple<Tile*,int,int>> pile;
    
     int counter = 0; 
@@ -166,7 +166,7 @@ void PlayerHand::place(std::vector<std::string> &user_input){
                         throw chosen_tile;
                     }
                     
-                    
+                    // add tile and grid position to vector as tuple
                     pile.push_back(std::make_tuple(chosen_tile,row,col));
                     
                 
@@ -192,7 +192,37 @@ void PlayerHand::place(std::vector<std::string> &user_input){
     if (user_input[1] == "done"){
         std::cout << user_input[0] << " " << user_input[1]<<std::endl;
     }
-    if(board->word_checker(pile)){
+    // Checks if dictionary is null
+    if (board->get_dictionary() != nullptr){
+        // if dictionary is not null then program performs word checker
+        if( (board->word_checker(pile))){
+            // if placement was valid then place tiles on board
+            for (int i = 0; i < pile.size();i++)
+            {
+                int row = std::get<1>(pile[i]);
+                int col = std::get<2>(pile[i]);
+                Tile* tile = std::get<0>(pile[i]);
+                tile->player = player_name;
+                place_tile(tile,row,col);
+            }
+        }
+        else{
+            // If placement was not valid then tiles are not placed
+            // and the tiles are returned to hand and players turn
+            // restarts
+            std::cout << "Invalid Word! Try Again " << std::endl;
+            for (int i = 0; i < pile.size();i++){
+                Tile* tile = std::get<0>(pile[i]);
+                hand->addBack(tile); 
+            }
+            print_hand();
+            get_user_input(user_input);
+            place(user_input);
+        }
+    }
+    else{
+        // If dictionary is nullptr then the player can place the tile
+        // regardless of validity of word.
         for (int i = 0; i < pile.size();i++){
             int row = std::get<1>(pile[i]);
             int col = std::get<2>(pile[i]);
@@ -200,16 +230,6 @@ void PlayerHand::place(std::vector<std::string> &user_input){
             tile->player = player_name;
             place_tile(tile,row,col);
         }
-    }
-    else{
-        std::cout << "Invalid Word! Try Again " << std::endl;
-         for (int i = 0; i < pile.size();i++){
-            Tile* tile = std::get<0>(pile[i]);
-            hand->addBack(tile); 
-        }
-        print_hand();
-        get_user_input(user_input);
-        place(user_input);
     }
     fill_hand();
     
@@ -244,6 +264,7 @@ void PlayerHand::replace(Letter letter)
 }
 
 void PlayerHand::help(int setting){
+    // Help Menu
     std::cout<<"HELP:"<<std::endl;
     std::cout<<"Avaiable Commands:"<<std::endl;
     std::cout << "- Place Tile(s) on Board: place \"Tile\" at \"Grid Position\"" << std::endl;
