@@ -1,0 +1,30 @@
+2
+actual_game
+n
+place R at L11
+place B at M11
+place done
+place R at L10
+place B at M10
+place done
+place I at M2
+place E at M3
+place R at M4
+place done
+place O at M11
+place W at M12
+place done
+place M at A0
+place E at B0
+place done
+place C at B2
+place I at B3
+place done
+place A at B5
+place done
+help
+hand
+place T at C5
+help
+place E at D5
+place done

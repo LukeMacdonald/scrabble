@@ -79,6 +79,7 @@ void PlayerHand::player_turn()
     }
     else if (action == "help"){
     help(0);
+    
     player_turn();
    
     }

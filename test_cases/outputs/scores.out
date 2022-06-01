@@ -1,0 +1,34 @@
+Menu
+----
+1. New game
+2. Load game
+3. Credits (Show student information)
+4. High Scores
+5. Quit
+> HIGH SCORES:
+Player : Score
+-----------------
+[0;32mluke : 83 (1st)[0m
+[0;31mMatt : 15 (2nd)[0m
+[0;33mSimon : 11 (3rd)[0m
+Will : 11
+Steve : 9
+A : 6
+Joyce : 6
+Mich : 6
+Luke : 5
+Hopper : 5
+Nancy : 5
+B : 5
+Ashma : 4
+Dustin : 2
+Bella : 1
+Jane : 0
+Menu
+----
+1. New game
+2. Load game
+3. Credits (Show student information)
+4. High Scores
+5. Quit
+> Goodbye
