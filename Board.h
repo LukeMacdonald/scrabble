@@ -35,6 +35,8 @@ public:
    void set_dictionary(Dictionary* dictionary);
    
    bool word_checker(std::vector<std::tuple<Tile*,int,int>> &pile);
+
+   std::string reverse(std::string str);
  
    
 private:

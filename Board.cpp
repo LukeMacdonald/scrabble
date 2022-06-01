@@ -98,7 +98,8 @@ bool Board::word_checker(std::vector<std::tuple<Tile*,int,int>> &pile){
       for (int j = 0; j < BOARD_WIDTH;j++){
          if (check_empty(i,j)){
             if (word != ""){
-               if (!dictionary->search(word)){
+               std::string r = reverse(word);
+               if (!dictionary->search(word) && !dictionary->search(r)){
                   for (int i = 0; i < pile.size();i++){
                      int row = std::get<1>(pile.at(i));
                      int col = std::get<2>(pile.at(i));
@@ -119,7 +120,8 @@ bool Board::word_checker(std::vector<std::tuple<Tile*,int,int>> &pile){
       for (int i = 0; i < BOARD_HEIGHT;i++){
          if (check_empty(i,j)){
             if (word != ""){
-               if (!dictionary->search(word)){
+               std::string r = reverse(word);
+               if (!dictionary->search(word) && !dictionary->search(r)){
                   for (int i = 0; i < pile.size();i++){
                      int row = std::get<1>(pile.at(i));
                      int col = std::get<2>(pile.at(i));
@@ -223,4 +225,12 @@ int Board::get_row_int(Letter letter)
     else if(letter == 'O'){row = O;}
     else{row = -1;}
     return row;
+}
+std::string Board::reverse(std::string str)
+{
+   std::string reverse = "";
+   for (int i = str.length() - 1; i >= 0; i--){
+      reverse +=  str[i];
+   }
+   return reverse;
 }
