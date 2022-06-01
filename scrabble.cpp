@@ -43,7 +43,7 @@ int main(void) {
    int option = 0;
    std::cin >> option;
 
-   while(!std::cin.eof() && option != 6){
+   while(!std::cin.eof() && option != 5){
       if(option == 1){
          new_game();
       } else if(option == 2){
@@ -52,8 +52,6 @@ int main(void) {
          credits();
       }else if(option == 4){
          high_scores();
-      }else if (option == 5){
-         settings();
       } else {
 
       }
@@ -184,15 +182,53 @@ void game_over(PlayerHand* player1,PlayerHand* player2){
    delete player2;
 }
 void save(PlayerHand* p1, PlayerHand* p2, TileBag* bag, Board* board){
+
+   std::ifstream input_file;
+   std::ofstream output_file;
    
    std::string file_name = p1->get_filename();
-   std::ofstream output_file("saved_games/"+file_name + ".txt");
+
+   input_file.open("saved_games/game_files.txt");
+   std::string game;
+   int counter = 1;
+   std::vector<std::string>games;
+   while(getline(input_file,game)){
+      games.push_back(game);
+      counter++;
+   }
+   input_file.close();
+   std::string response;
+   bool name_change = false;
+   while (std::find(games.begin(), games.end(), file_name) != games.end() && !name_change)
+   {
+      std::string response;
+      std::cout <<"Game File Already Exists!\nWould you like to overwrite it? (y/n):" <<std::endl;
+      std::cin >> response;
+      if (response == "n" || response  == "N" || response  == "No" || response  == "no"){
+         std::cout << "Enter Game Save Name:"<<std::endl;;
+         std::cin >> file_name;
+         name_change = true;
+      }
+      else if(response == "y" || response  == "yes" || response  == "Yes" || response  == "Y"){
+         name_change = true;
+      }
+ 
+   }
+   if (std::find(games.begin(), games.end(), file_name) == games.end()){
+      output_file.open("saved_games/game_files.txt",std::ofstream::app);
+      output_file << '\n' << file_name;
+      output_file.close();
+   }
+   output_file.open("saved_games/"+ file_name + ".txt");
    
    save_scores(p1->get_player_name(),p2->get_player_name(),p1->get_score(),p2->get_score());
    p1->save_details(output_file);
    p2->save_details(output_file);
    board->save_details(output_file);
    bag->save_details(output_file);
+
+   output_file.close();
+   std::cout<<"Game Saved!" <<std::endl;
    
    
    delete p1;
