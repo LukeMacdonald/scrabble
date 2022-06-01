@@ -3,6 +3,7 @@
 #include <iostream>
 #include <vector>
 #include <fstream>
+#include <set>
 class Dictionary {
     public:
         Dictionary();
@@ -15,7 +16,7 @@ class Dictionary {
         bool search(std::string);
         
     private:
-        std::vector<std::string> dictionary;
+        std::set<std::string> dictionary;
         int length;
 };
 #endif // ASSIGN2_DICTIONARY_H

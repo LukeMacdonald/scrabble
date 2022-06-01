@@ -16,8 +16,9 @@ void Dictionary::fill(std::string filename){
     std::string word;
     while (std::getline(input_file, word))
     {
-        std::transform(word.begin(), word.end(), word.begin(), toupper);
-        dictionary.push_back(word);
+        for (auto & c: word) c = toupper(c);
+        //std::transform(word.begin(), word.end(), word.begin(), toupper);
+        dictionary.insert(word);
         length++;
     }
     input_file.close();
@@ -29,9 +30,8 @@ int Dictionary::size(){
 
 bool Dictionary::search(std::string word){
     bool result;
-    if(std::find(dictionary.begin(), dictionary.end(), word) != dictionary.end()) {
+    if(dictionary.count(word)) {
         result = true;
-    
     } else {
         result = false;
     }
