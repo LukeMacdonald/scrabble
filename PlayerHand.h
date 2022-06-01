@@ -1,6 +1,9 @@
 #ifndef ASSIGN2_PLAYERHAND_H
 #define ASSIGN2_PLAYERHAND_H
 
+#include <vector>
+#include <algorithm>
+#include <string>
 #include "Extras.h"
 #include "TileBag.h"
 #include "Board.h"

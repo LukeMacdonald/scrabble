@@ -1,10 +1,14 @@
 #include "Board.h"
 Board::Board(){
-    player1 = "";
-    player2 = "";
-    Tile* temp = new Tile();
-    board = std::vector<std::vector<Tile*> >(BOARD_WIDTH, std::vector<Tile*>(BOARD_HEIGHT, temp));
-    for(int i = 0; i < BOARD_HEIGHT; i++){
+   
+   player1 = "";
+   player2 = "";
+   
+   Tile* temp = new Tile();
+   
+   board = std::vector<std::vector<Tile*> >(BOARD_WIDTH, std::vector<Tile*>(BOARD_HEIGHT, temp));
+   
+   for(int i = 0; i < BOARD_HEIGHT; i++){
       for(int j = 0; j < BOARD_WIDTH; j++){
          board[i][j] = new Tile();
       }
@@ -18,6 +22,7 @@ Board::~Board(){
          delete board[i][j];
       }
    }
+   delete dictionary;
 }
 void Board::print(){
    int row = int('A');
@@ -153,6 +158,7 @@ void Board::load_details(std::ifstream& input_file){
    std::string t;
    getline(input_file, t);
    std::istringstream ss(t);
+   
    while (std::getline(ss, t, ' '))
    {
       Letter letter = t[0];
@@ -161,6 +167,16 @@ void Board::load_details(std::ifstream& input_file){
       board[get_row_int(row)][stoi(col)] = new Tile(letter, 0);
    }
    ss.clear();
+}
+
+void Board::set_player1(std::string player1){
+    this->player1 = player1;
+}
+void Board::set_player2(std::string player2){
+    this->player2 = player2;
+}
+void Board::set_dictionary(Dictionary* dictionary){
+    this->dictionary = dictionary;
 }
 
 Letter Board::get_row_char(int row){
@@ -207,13 +223,4 @@ int Board::get_row_int(Letter letter)
     else if(letter == 'O'){row = O;}
     else{row = -1;}
     return row;
-}
-void Board::set_player1(std::string player1){
-    this->player1 = player1;
-}
-void Board::set_player2(std::string player2){
-    this->player2 = player2;
-}
-void Board::set_dictionary(Dictionary* dictionary){
-    this->dictionary = dictionary;
 }

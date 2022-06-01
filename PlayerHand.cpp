@@ -1,13 +1,4 @@
 #include "PlayerHand.h"
-#include "Extras.h"
-#include "TileBag.h"
-#include <vector>
-#include <algorithm>
-#include <string>
-
-#define NC "\e[0m"
-#define RED "\e[0;31m"
-#define GRN "\e[0;32m"
 
 PlayerHand::PlayerHand(){
     hand = new LinkedList();
@@ -211,15 +202,15 @@ void PlayerHand::place(std::vector<std::string> &user_input){
         }
     }
     else{
-        std::cout << "Invalid Words" << std::endl;
+        std::cout << "Invalid Word! Try Again " << std::endl;
          for (int i = 0; i < pile.size();i++){
             Tile* tile = std::get<0>(pile[i]);
-            hand->addBack(tile);
+            hand->addBack(tile); 
         }
+        print_hand();
         get_user_input(user_input);
         place(user_input);
     }
-
     fill_hand();
     
     // BINGO OPERATION!!!

@@ -13,8 +13,7 @@ class Dictionary {
         int size();
         
         bool search(std::string);
-        bool find(std::string,int start,int end);
-    
+        
     private:
         std::vector<std::string> dictionary;
         int length;

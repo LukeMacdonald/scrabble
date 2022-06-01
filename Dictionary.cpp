@@ -34,23 +34,6 @@ bool Dictionary::search(std::string word){
     
     } else {
         result = false;
-    /* v does not contain x */
     }
     return result;
-}
-bool Dictionary::find(std::string word,int start,int end)
-{
-    if (end >= start){
-        int mid = (start + (end - start)) / 2;
-        if (word == dictionary.at(mid)){
-            return true;
-        }  
-        else if (word > dictionary.at(mid)){
-            find(word,mid + 1,end);
-        }
-        else if (word < dictionary.at(mid)){
-            find(word,start,mid - 1);
-        }
-    }
-    return false;
 }
