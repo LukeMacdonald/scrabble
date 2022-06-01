@@ -34,7 +34,6 @@ public:
    void set_score(int score);
    void set_bag(TileBag* bag);
    void set_board(Board* board);
-   void set_dictionary(Dictionary* dictionary);
    int get_score();
    int get_hand_size();
    std::string get_filename();
@@ -45,18 +44,13 @@ public:
    void save_details(std::ofstream& output_file);
    void load_details(std::ifstream& input_file);
 
-
-
 private:
    std::string player_name;
    std::string filename = "";
    int score;
-
    TileBag* bag;
    Board* board;
    LinkedList* hand;
-   
-   Dictionary* dictionary;
 
    bool save = false;
    bool quit = false;

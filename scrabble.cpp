@@ -76,8 +76,7 @@ void menu(){
    std::cout << "2. Load game" << std::endl;
    std::cout << "3. Credits (Show student information)" << std::endl;
    std::cout << "4. High Scores" <<std::endl;
-   std::cout << "5. Settings" << std::endl;
-   std::cout << "6. Quit" << std::endl;
+   std::cout << "5. Quit" << std::endl;
    std::cout << "> ";
 }
 
@@ -207,6 +206,8 @@ void load(){
    PlayerHand* p2 = new PlayerHand();
    Board* board = new Board();
    TileBag* bag = new TileBag();
+   Dictionary* dicationary = new Dictionary("configs/wordlist");
+   
 
    std::ifstream input_file;
    std::string player;
@@ -245,6 +246,7 @@ void load(){
    p2->set_board(board);
    board->set_player1(p1->get_player_name());
    board->set_player2(p2->get_player_name());
+   board->set_dictionary(dicationary);
    bag->load_details(input_file);
    p1->set_bag(bag);
    p2->set_bag(bag);
@@ -327,49 +329,9 @@ void save_scores(std::string p1_name, std::string p2_name,int p1_score,int p2_sc
       }
    }
    output_file.close();
-
-
 }
 bool sortbysec(const std::tuple<std::string, int>& a, 
                const std::tuple<std::string, int>& b)
 {
     return (std::get<1>(a) > std::get<1>(b));
 }
-void settings(){
-   std::cout << "Settings:" << std::endl;
-   std::cout << "1. Board Game Colour" <<std::endl;
-   std::cout << "2. Reset High Scores" <<std::endl;
-   std::cout << "3. Select Number of Players" <<std::endl;
-   std::cout << "4. Word Checker" << std::endl;
-   std::cout << "5. Return to Main Menu" <<std::endl;
-   std::cout << "> ";
-   int option = 0;
-   int num_players;
-   std::cin.ignore();
-   std::cin >> option;
-
-   while(!std::cin.eof() && option != 6){
-      if(option == 1){
-         new_game();
-      } else if(option == 2){
-         std::cout <<"Resetting High Scores..."<<std::endl;
-         std::ofstream file("high_scores.txt");
-         file.close();
-         std::cout << "Complete!" << std::endl;
-      } else if(option == 3){
-         std::cout<<"Enter Number of Players (2-4)" << std::endl;
-         std::cin >> num_players;
-      }else if(option == 5){
-      } 
-      else {
-
-      }
-      if (!std::cin.eof()){
-         menu();
-         std::cin >> option;
-      }
-   }
-
-      
-}
-

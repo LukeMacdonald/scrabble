@@ -111,8 +111,7 @@ void PlayerHand::player_turn()
 void PlayerHand::place(std::vector<std::string> &user_input){
 
     std::vector<std::tuple<Tile*,int,int>> pile;
-    //std::string word = "";
-
+   
     int counter = 0; 
     // iterate until either player selects done or has placed entire hand
     while (user_input[1] != "done" && counter < 7 && hand->size() > 0)
