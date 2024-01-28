@@ -26,11 +26,6 @@
 <a href="https://github.com/LukeMacdonald/scrabble"><strong>Explore the docs »</strong></a>
 <br />
 <br />
-<a href="https://github.com/LukeMacdonald/scrabble">View Demo</a>
-·
-<a href="https://github.com/LukeMacdonald/scrabble/issues">Report Bug</a>
-·
-<a href="https://github.com/LukeMacdonald/scrabble/issues">Request Feature</a>
 
   </p>
 </div>
@@ -55,9 +50,7 @@
     <li><a href="#usage">Usage</a></li>
     <li><a href="#roadmap">Roadmap</a></li>
     <li><a href="#contributing">Contributing</a></li>
-    <li><a href="#license">License</a></li>
     <li><a href="#contact">Contact</a></li>
-    <li><a href="#acknowledgments">Acknowledgments</a></li>
   </ol>
 </details>
 
